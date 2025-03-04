@@ -27,14 +27,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	admissionregistrationv1 "k8s.io/api/admissionregistration/v1"
 	appsv1 "k8s.io/api/apps/v1"
-	autoscaling "k8s.io/api/autoscaling/v2beta2"
 	batchv1 "k8s.io/api/batch/v1"
-	batchv1beta1 "k8s.io/api/batch/v1beta1"
 	certv1 "k8s.io/api/certificates/v1"
 	coordinationv1 "k8s.io/api/coordination/v1"
 	v1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
-	policy "k8s.io/api/policy/v1beta1"
 	storagev1 "k8s.io/api/storage/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	vpaautoscaling "k8s.io/autoscaler/vertical-pod-autoscaler/pkg/apis/autoscaling.k8s.io/v1beta2"
@@ -228,24 +225,24 @@ func (b *Builder) BuildStores() [][]cache.Store {
 }
 
 var availableStores = map[string]func(f *Builder) []cache.Store{
-	"certificatesigningrequests":      func(b *Builder) []cache.Store { return b.buildCsrStores() },
-	"configmaps":                      func(b *Builder) []cache.Store { return b.buildConfigMapStores() },
-	"cronjobs":                        func(b *Builder) []cache.Store { return b.buildCronJobStores() },
-	"daemonsets":                      func(b *Builder) []cache.Store { return b.buildDaemonSetStores() },
-	"deployments":                     func(b *Builder) []cache.Store { return b.buildDeploymentStores() },
-	"endpoints":                       func(b *Builder) []cache.Store { return b.buildEndpointsStores() },
-	"horizontalpodautoscalers":        func(b *Builder) []cache.Store { return b.buildHPAStores() },
-	"ingresses":                       func(b *Builder) []cache.Store { return b.buildIngressStores() },
-	"jobs":                            func(b *Builder) []cache.Store { return b.buildJobStores() },
-	"leases":                          func(b *Builder) []cache.Store { return b.buildLeasesStores() },
-	"limitranges":                     func(b *Builder) []cache.Store { return b.buildLimitRangeStores() },
-	"mutatingwebhookconfigurations":   func(b *Builder) []cache.Store { return b.buildMutatingWebhookConfigurationStores() },
-	"namespaces":                      func(b *Builder) []cache.Store { return b.buildNamespaceStores() },
-	"networkpolicies":                 func(b *Builder) []cache.Store { return b.buildNetworkPolicyStores() },
-	"nodes":                           func(b *Builder) []cache.Store { return b.buildNodeStores() },
-	"persistentvolumeclaims":          func(b *Builder) []cache.Store { return b.buildPersistentVolumeClaimStores() },
-	"persistentvolumes":               func(b *Builder) []cache.Store { return b.buildPersistentVolumeStores() },
-	"poddisruptionbudgets":            func(b *Builder) []cache.Store { return b.buildPodDisruptionBudgetStores() },
+	"certificatesigningrequests": func(b *Builder) []cache.Store { return b.buildCsrStores() },
+	"configmaps":                 func(b *Builder) []cache.Store { return b.buildConfigMapStores() },
+	//"cronjobs":                        func(b *Builder) []cache.Store { return b.buildCronJobStores() },
+	"daemonsets":  func(b *Builder) []cache.Store { return b.buildDaemonSetStores() },
+	"deployments": func(b *Builder) []cache.Store { return b.buildDeploymentStores() },
+	"endpoints":   func(b *Builder) []cache.Store { return b.buildEndpointsStores() },
+	//"horizontalpodautoscalers":        func(b *Builder) []cache.Store { return b.buildHPAStores() },
+	"ingresses":                     func(b *Builder) []cache.Store { return b.buildIngressStores() },
+	"jobs":                          func(b *Builder) []cache.Store { return b.buildJobStores() },
+	"leases":                        func(b *Builder) []cache.Store { return b.buildLeasesStores() },
+	"limitranges":                   func(b *Builder) []cache.Store { return b.buildLimitRangeStores() },
+	"mutatingwebhookconfigurations": func(b *Builder) []cache.Store { return b.buildMutatingWebhookConfigurationStores() },
+	"namespaces":                    func(b *Builder) []cache.Store { return b.buildNamespaceStores() },
+	"networkpolicies":               func(b *Builder) []cache.Store { return b.buildNetworkPolicyStores() },
+	"nodes":                         func(b *Builder) []cache.Store { return b.buildNodeStores() },
+	"persistentvolumeclaims":        func(b *Builder) []cache.Store { return b.buildPersistentVolumeClaimStores() },
+	"persistentvolumes":             func(b *Builder) []cache.Store { return b.buildPersistentVolumeStores() },
+	//"poddisruptionbudgets":            func(b *Builder) []cache.Store { return b.buildPodDisruptionBudgetStores() },
 	"pods":                            func(b *Builder) []cache.Store { return b.buildPodStores() },
 	"replicasets":                     func(b *Builder) []cache.Store { return b.buildReplicaSetStores() },
 	"replicationcontrollers":          func(b *Builder) []cache.Store { return b.buildReplicationControllerStores() },
@@ -277,9 +274,9 @@ func (b *Builder) buildConfigMapStores() []cache.Store {
 	return b.buildStoresFunc(configMapMetricFamilies(b.allowAnnotationsList["configmaps"], b.allowLabelsList["configmaps"]), &v1.ConfigMap{}, createConfigMapListWatch, b.useAPIServerCache)
 }
 
-func (b *Builder) buildCronJobStores() []cache.Store {
-	return b.buildStoresFunc(cronJobMetricFamilies(b.allowAnnotationsList["cronjobs"], b.allowLabelsList["cronjobs"]), &batchv1beta1.CronJob{}, createCronJobListWatch, b.useAPIServerCache)
-}
+//func (b *Builder) buildCronJobStores() []cache.Store {
+//	return b.buildStoresFunc(cronJobMetricFamilies(b.allowAnnotationsList["cronjobs"], b.allowLabelsList["cronjobs"]), &batchv1beta1.CronJob{}, createCronJobListWatch, b.useAPIServerCache)
+//}
 
 func (b *Builder) buildDaemonSetStores() []cache.Store {
 	return b.buildStoresFunc(daemonSetMetricFamilies(b.allowAnnotationsList["daemonsets"], b.allowLabelsList["daemonsets"]), &appsv1.DaemonSet{}, createDaemonSetListWatch, b.useAPIServerCache)
@@ -293,9 +290,9 @@ func (b *Builder) buildEndpointsStores() []cache.Store {
 	return b.buildStoresFunc(endpointMetricFamilies(b.allowAnnotationsList["endpoints"], b.allowLabelsList["endpoints"]), &v1.Endpoints{}, createEndpointsListWatch, b.useAPIServerCache)
 }
 
-func (b *Builder) buildHPAStores() []cache.Store {
-	return b.buildStoresFunc(hpaMetricFamilies(b.allowAnnotationsList["horizontalpodautoscalers"], b.allowLabelsList["horizontalpodautoscalers"]), &autoscaling.HorizontalPodAutoscaler{}, createHPAListWatch, b.useAPIServerCache)
-}
+//func (b *Builder) buildHPAStores() []cache.Store {
+//	return b.buildStoresFunc(hpaMetricFamilies(b.allowAnnotationsList["horizontalpodautoscalers"], b.allowLabelsList["horizontalpodautoscalers"]), &autoscaling.HorizontalPodAutoscaler{}, createHPAListWatch, b.useAPIServerCache)
+//}
 
 func (b *Builder) buildIngressStores() []cache.Store {
 	return b.buildStoresFunc(ingressMetricFamilies(b.allowAnnotationsList["ingresses"], b.allowLabelsList["ingresses"]), &networkingv1.Ingress{}, createIngressListWatch, b.useAPIServerCache)
@@ -333,9 +330,9 @@ func (b *Builder) buildPersistentVolumeStores() []cache.Store {
 	return b.buildStoresFunc(persistentVolumeMetricFamilies(b.allowAnnotationsList["persistentvolumes"], b.allowLabelsList["persistentvolumes"]), &v1.PersistentVolume{}, createPersistentVolumeListWatch, b.useAPIServerCache)
 }
 
-func (b *Builder) buildPodDisruptionBudgetStores() []cache.Store {
-	return b.buildStoresFunc(podDisruptionBudgetMetricFamilies(b.allowAnnotationsList["poddisruptionbudgets"], b.allowLabelsList["poddisruptionbudgets"]), &policy.PodDisruptionBudget{}, createPodDisruptionBudgetListWatch, b.useAPIServerCache)
-}
+//func (b *Builder) buildPodDisruptionBudgetStores() []cache.Store {
+//	return b.buildStoresFunc(podDisruptionBudgetMetricFamilies(b.allowAnnotationsList["poddisruptionbudgets"], b.allowLabelsList["poddisruptionbudgets"]), &policy.PodDisruptionBudget{}, createPodDisruptionBudgetListWatch, b.useAPIServerCache)
+//}
 
 func (b *Builder) buildReplicaSetStores() []cache.Store {
 	return b.buildStoresFunc(replicaSetMetricFamilies(b.allowAnnotationsList["replicasets"], b.allowLabelsList["replicasets"]), &appsv1.ReplicaSet{}, createReplicaSetListWatch, b.useAPIServerCache)
